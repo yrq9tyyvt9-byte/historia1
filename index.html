@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Historia – klasa 4: nauka i test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFCF7; --grid:#D9EBD7; --card:#FFFFFF; --text:#1C2333; --muted:#55607A;
+  --ink:#1D3A8F; --line:#B9C3DA;
+  --pink:rgba(255,79,176,.42); --orange:rgba(255,122,61,.45); --cyan:rgba(44,197,218,.45);
+  --good:#0B7A54; --bad:#C8321A; --pen:#D62828;
+  --hand:'Caveat', 'Comic Sans MS', cursive;
+  --body:'Lexend', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111A2C; --grid:#1B2840; --card:#172238; --text:#E8EDF7; --muted:#A3AFC8;
+    --ink:#A9BEFF; --line:#34446A;
+    --pink:rgba(255,79,176,.38); --orange:rgba(255,122,61,.38); --cyan:rgba(44,197,218,.35);
+    --good:#4FD9A3; --bad:#FF7A61; --pen:#FF6B6B;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111A2C; --grid:#1B2840; --card:#172238; --text:#E8EDF7; --muted:#A3AFC8;
+  --ink:#A9BEFF; --line:#34446A;
+  --pink:rgba(255,79,176,.38); --orange:rgba(255,122,61,.38); --cyan:rgba(44,197,218,.35);
+  --good:#4FD9A3; --bad:#FF7A61; --pen:#FF6B6B;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;font-family:var(--body);color:var(--text);font-size:17px;line-height:1.55;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;
+}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px;border-radius:4px}
+.app{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:22px}
+h1{font-family:var(--hand);font-weight:700;font-size:clamp(2.4rem,7vw,3.4rem);line-height:1;margin:0;color:var(--ink)}
+h1 span{background:linear-gradient(transparent 38%,var(--orange) 38% 88%,transparent 88%);padding:0 .15em}
+.sub{margin:6px 0 0;color:var(--muted);font-size:.95rem}
+nav{display:flex;gap:6px}
+nav button{border:2px solid var(--line);background:var(--card);border-radius:999px;padding:8px 18px;cursor:pointer;font-weight:500}
+nav button[aria-current="true"]{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+
+/* ---------- NAUKA ---------- */
+.learn{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
+.toc{display:flex;flex-direction:column;gap:4px;position:sticky;top:calc(12px + env(safe-area-inset-top,0px))}
+.toc button{text-align:left;border:0;background:transparent;padding:8px 10px;border-radius:6px;cursor:pointer;color:var(--text);font-size:.95rem}
+.toc button .n{display:inline-block;width:1.6em;color:var(--muted);font-variant-numeric:tabular-nums}
+.toc button[aria-current="true"]{background:var(--card);box-shadow:inset 3px 0 0 var(--ink);font-weight:600}
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:4px 14px 14px 4px;padding:22px 24px 26px;box-shadow:inset 34px 0 0 -32px var(--pen)}
+.sheet h2{font-family:var(--hand);font-size:2.3rem;line-height:1.1;margin:0 0 14px;color:var(--ink);font-weight:700}
+.sheet h3{font-family:var(--hand);font-size:1.7rem;margin:22px 0 6px;font-weight:700;color:var(--text)}
+.hl-o{background:linear-gradient(transparent 40%,var(--orange) 40% 90%,transparent 90%)}
+.hl-p{background:linear-gradient(transparent 40%,var(--pink) 40% 90%,transparent 90%)}
+.hl-c{background:linear-gradient(transparent 40%,var(--cyan) 40% 90%,transparent 90%)}
+.sheet p{margin:6px 0;max-width:68ch}
+.sheet ul,.sheet ol{margin:6px 0;padding-left:1.3em;max-width:68ch}
+.sheet li{margin:3px 0}
+.def{border-left:4px solid var(--ink);padding:6px 0 6px 14px;margin:10px 0;font-weight:500}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 22px}
+.formula{font-family:var(--hand);font-size:1.6rem;line-height:1.3;margin:10px 0;color:var(--ink)}
+.sheet-actions{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.compass-learn{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.compass-learn svg{width:min(300px,100%);height:auto}
+.compass-say{font-family:var(--hand);font-size:2rem;color:var(--ink);min-width:12ch}
+
+/* ---------- BUTTONS ---------- */
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- TEST SETUP ---------- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.panel h2{font-family:var(--hand);font-size:2.2rem;margin:0 0 6px;color:var(--ink)}
+.field{margin:18px 0}
+.field > .lbl{font-weight:600;margin-bottom:8px;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--line);background:transparent;border-radius:999px;padding:6px 14px;cursor:pointer;font-size:.93rem}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--pink)}
+.toggle{display:flex;align-items:center;gap:10px;cursor:pointer}
+.toggle input{width:20px;height:20px;accent-color:var(--ink)}
+details{margin-top:18px}
+summary{cursor:pointer;color:var(--muted)}
+.scale{border-collapse:collapse;margin-top:10px;font-size:.95rem}
+.scale td{padding:4px 10px 4px 0}
+.scale input{width:4.2em;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
+.history{margin-top:22px;font-size:.93rem;color:var(--muted)}
+.history ol{padding-left:1.2em;margin:6px 0}
+
+/* ---------- QUIZ ---------- */
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:14px}
+.progress i{display:block;height:100%;background:var(--ink);transition:width .25s}
+.qmeta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.9rem;margin-bottom:6px}
+.qtext{font-size:1.25rem;font-weight:500;margin:4px 0 4px;max-width:60ch}
+.qhint{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;border:2px solid var(--line);background:var(--card);border-radius:10px;padding:12px 14px;cursor:pointer;width:100%}
+.opt .box{flex:none;width:24px;height:24px;border:2px solid var(--line);border-radius:6px;display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.opt.round .box{border-radius:50%}
+.opt.sel{border-color:var(--ink);background:var(--pink)}
+.opt.sel .box{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.opt.ok{border-color:var(--good);background:var(--cyan)}
+.opt.no{border-color:var(--bad);background:var(--orange)}
+.opt:disabled{cursor:default}
+.tf{grid-template-columns:1fr 1fr}
+.order li{list-style:none;display:flex;align-items:center;gap:10px;border:2px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:8px;background:var(--card)}
+.order{padding:0;margin:0}
+.order .pos{font-family:var(--hand);font-size:1.6rem;width:1.2em;text-align:center;color:var(--ink)}
+.order .txt{flex:1}
+.order .mv{display:flex;gap:4px}
+.order .mv button{border:1px solid var(--line);background:transparent;border-radius:6px;width:36px;height:36px;cursor:pointer}
+.order li.ok{border-color:var(--good);background:var(--cyan)}
+.order li.no{border-color:var(--bad);background:var(--orange)}
+.num{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.num input{width:8em;padding:10px 12px;font-size:1.3rem;border:2px solid var(--line);border-radius:10px;background:var(--card)}
+.num input.ok{border-color:var(--good);background:var(--cyan)}
+.num input.no{border-color:var(--bad);background:var(--orange)}
+.compass-q svg{width:min(340px,100%);height:auto;display:block;margin:0 auto}
+.cdir{cursor:pointer}
+.cdir circle{fill:var(--card);stroke:var(--line);stroke-width:2}
+.cdir text{font-family:var(--body);font-weight:600;font-size:15px;fill:var(--text);pointer-events:none}
+.cdir:hover circle,.cdir:focus circle{stroke:var(--ink)}
+.cdir:focus{outline:none}
+.cdir.sel circle{fill:var(--pink);stroke:var(--ink);stroke-width:3}
+.cdir.ok circle{fill:var(--cyan);stroke:var(--good);stroke-width:3}
+.cdir.no circle{fill:var(--orange);stroke:var(--bad);stroke-width:3}
+.feedback{margin-top:16px;padding:12px 14px;border-radius:10px;border:2px solid}
+.feedback.ok{border-color:var(--good)}
+.feedback.half{border-color:var(--ink)}
+.feedback.no{border-color:var(--bad)}
+.feedback b{display:block;margin-bottom:2px}
+.qactions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+
+/* ---------- RESULTS ---------- */
+.result-top{display:flex;flex-wrap:wrap;align-items:center;gap:20px 30px}
+.grade{position:relative;width:150px;height:150px;flex:none}
+.grade svg{position:absolute;inset:0;width:100%;height:100%}
+.grade .digit{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--hand);font-weight:700;font-size:6rem;line-height:1;color:var(--pen)}
+.grade path{fill:none;stroke:var(--pen);stroke-width:4;stroke-linecap:round;stroke-dasharray:620;stroke-dashoffset:620;animation:draw 1s .2s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.gname{font-family:var(--hand);font-size:2.4rem;line-height:1;color:var(--ink);margin:0}
+.gsum{margin:6px 0 0;font-size:1.1rem}
+.gmsg{color:var(--muted);margin:4px 0 0}
+.review{margin-top:26px;padding:0;list-style:none}
+.review li{border-top:1px solid var(--line);padding:14px 0}
+.review .mark{font-weight:700;margin-right:6px}
+.review .mark.ok{color:var(--good)}.review .mark.no{color:var(--bad)}.review .mark.half{color:var(--ink)}
+.review .row{font-size:.95rem;margin:3px 0 0}
+.review .why{color:var(--muted);font-size:.92rem;margin-top:4px}
+.res-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+
+/* sort + tree */
+.sort{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.sort li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;border:2px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--card)}
+.sort li.ok{border-color:var(--good)}.sort li.no{border-color:var(--bad)}
+.sort .txt{font-weight:500}
+.sort .cats{display:flex;flex-wrap:wrap;gap:6px}
+.cat{border:2px solid var(--line);background:transparent;border-radius:999px;padding:5px 12px;cursor:pointer;font-size:.88rem}
+.cat.sel{border-color:var(--ink);background:var(--pink)}
+.cat.ok{border-color:var(--good);background:var(--cyan)}
+.cat.no{border-color:var(--bad);background:var(--orange)}
+.cat:disabled{cursor:default}
+svg.tree{width:100%;max-width:560px;height:auto;display:block;margin:6px auto}
+svg.tree .tn{font-family:var(--body);font-weight:600;font-size:15px;fill:var(--text)}
+svg.tree .tr{font-family:var(--body);font-size:11.5px;fill:var(--muted)}
+.tree-learn .tp{cursor:pointer}
+.tree-learn .tp:focus{outline:none}
+.tree-learn .tp:focus rect{stroke-width:3}
+.tree-q{margin-bottom:12px}
+@media (max-width:720px){
+  .learn{grid-template-columns:1fr}
+  .toc{position:static;flex-direction:row;overflow-x:auto;padding-bottom:6px}
+  .toc button{white-space:nowrap}
+  .sheet{padding:18px 16px 22px}
+  .panel{padding:18px 16px}
+  .tf{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .grade path{animation:none;stroke-dashoffset:0}
+  .progress i{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1><span>Historia, klasa 4</span></h1>
+      <p class="sub">Ucz się z podręcznika, a potem sprawdź się w teście z oceną.</p>
+    </div>
+    <nav>
+      <button id="tab-learn" aria-current="true">Nauka</button>
+      <button id="tab-test" aria-current="false">Test</button>
+    </nav>
+  </header>
+  <main id="main"></main>
+</div>
+
+<script>
+/* ================= DANE ================= */
+const DIRS = [];
+const TOPICS = [
+ {id:'historia', name:'Co to jest historia', html:`
+  <h2>Pierwsza lekcja historii</h2>
+  <h3><span class="hl-o">Trzy znaczenia słowa „historia”</span></h3>
+  <ol>
+    <li><b>Opowieść</b> – „opowiedz jakąś historię”.</li>
+    <li><b>Przeszłość</b> – „to już historia”, czyli coś się skończyło.</li>
+    <li><b>Nauka o przeszłości ludzi</b> – wszystkich ludzi, także Twoich dziadków, rodziców i Twojej.</li>
+  </ol>
+  <p>Każdy człowiek i każda rodzina mają swoją historię.</p>
+  <h3><span class="hl-o">Po co nam historia?</span></h3>
+  <ul>
+    <li>pozwala <b>lepiej zrozumieć świat</b>, w którym żyjemy,</li>
+    <li>postacie historyczne mogą być dla nas <b>wzorem postępowania</b>,</li>
+    <li>znając przyczyny dawnych zdarzeń, możemy <b>przewidywać skutki naszych działań</b>,</li>
+    <li>jest po prostu ciekawa – każda relacja jest oparta na faktach.</li>
+  </ul>
+  <p>Czy historia jest nauczycielką życia? I tak, i nie: uczy na błędach przodków, ale nie daje gotowych rozwiązań, bo każda epoka jest inna.</p>
+  <h3>Czego nauczysz się na lekcjach historii?</h3>
+  <div class="cols">
+    <div><p><b>Poznasz:</b></p><ul><li>najważniejsze wydarzenia,</li><li>ważne postacie,</li><li>dzieje Polski i innych krajów.</li></ul></div>
+    <div><p><b>Nauczysz się:</b></p><ul><li>zbierać informacje i sprawdzać, czy są prawdziwe,</li><li>rozpoznawać przyczyny i skutki,</li><li>tworzyć własną opowieść ze sprawdzonych faktów.</li></ul></div>
+  </div>
+  <h3><span class="hl-p">Ważne daty z lekcji</span></h3>
+  <ul>
+    <li><b>1492</b> – Krzysztof Kolumb odkrył Amerykę.</li>
+    <li><b>1911</b> – Maria Skłodowska-Curie dostała Nagrodę Nobla.</li>
+    <li><b>1918</b> – Polska odzyskała niepodległość.</li>
+  </ul>`},
+ {id:'postacie', name:'Baśń, legenda czy historia', html:`
+  <h2>Baśń, legenda czy historia?</h2>
+  <p>Przeszłość badają <b>historycy</b>. Opisują postacie, które <b>żyły naprawdę</b>, i wydarzenia, które <b>naprawdę się wydarzyły</b>. Najważniejsza jest dla nich <b>prawda</b>.</p>
+  <div class="cols">
+    <div><h3><span class="hl-p">Baśnie</span></h3><p>Postacie są <b>wymyślone</b>, a ich losy toczą się w nieokreślonym miejscu i czasie: „dawno, dawno temu…”.</p><p>Przykład: Królewna Śnieżka.</p></div>
+    <div><h3><span class="hl-o">Legendy</span></h3><p>Postacie są <b>wymyślone</b>, ale pojawiają się też <b>prawdziwe osoby, miejsca i wydarzenia</b>. Prawda miesza się z nieprawdą.</p><p>Przykłady: Robin Hood, Smok Wawelski.</p></div>
+    <div><h3><span class="hl-c">Historia</span></h3><p>Postacie historyczne to ludzie, którzy <b>żyli naprawdę</b>.</p><p>Przykład: król Polski Stanisław August Poniatowski.</p></div>
+  </div>`},
+ {id:'zrodla', name:'Źródła historyczne', html:`
+  <h2>Źródła historyczne</h2>
+  <p class="def"><span class="hl-o">Źródła historyczne</span> to materiały, z których historycy czerpią wiedzę o przeszłości. Są nimi wszystkie ślady działalności człowieka z minionych czasów.</p>
+  <p>Źródłem może być gruba kronika i krótki liścik, wspaniała budowla i potłuczony garnek, gazeta i wspomnienia starszej osoby. Wszystko, co robimy dziś, może być źródłem w przyszłości.</p>
+  <h3>Jak dzielimy źródła?</h3>
+  <div class="cols">
+    <div><p><b>Materialne – pisane</b></p><ul><li>książki, kroniki</li><li>dokumenty, zbiory praw</li><li>listy, pamiętniki</li><li>gazety, mapy</li><li>napisy na budowlach i pomnikach</li></ul></div>
+    <div><p><b>Materialne – niepisane</b></p><ul><li>budowle i ich ruiny</li><li>obrazy, rzeźby</li><li>odzież, biżuteria, broń</li><li>zdjęcia, filmy</li><li>przedmioty codziennego użytku</li></ul></div>
+    <div><p><b>Niematerialne</b> (nie można ich dotknąć)</p><ul><li>tradycja</li><li>obyczaje</li><li>przekazy ustne (opowieści, pieśni)</li></ul></div>
+  </div>
+  <h3><span class="hl-c">Archeolodzy</span></h3>
+  <p>Pomagają historykom. Szukają <b>materialnych śladów</b> działalności człowieka, rozpoznają je, opisują i określają, kiedy powstały. Ważną metodą są <b>wykopaliska</b> – prace, dzięki którym odnajduje się przedmioty ukryte pod ziemią. Dzięki nim wiemy, jak budowano domy, jakich używano narzędzi i co jedzono.</p>
+  <p>Ciekawostka: pierwsze źródło z nazwą „Polska” to maleńka moneta (19 mm) z czasów króla Bolesława Chrobrego, sprzed tysiąca lat.</p>`},
+ {id:'wiarygodnosc', name:'Wiarygodność źródeł', html:`
+  <h2>Czy źródło mówi prawdę?</h2>
+  <p>Kroniki czasem zawierają nieprawdziwe informacje, dokumenty bywają sfałszowane, a świadkowie mogą coś źle pamiętać albo podawać swoje opinie jako fakty.</p>
+  <p class="def"><span class="hl-p">Wiarygodność źródła</span> – na ile można mu ufać, czyli na ile informacje w nim są pewne.</p>
+  <h3>Jak historyk ją ocenia?</h3>
+  <ul><li>ustala, <b>kto, kiedy i w jakim celu</b> stworzył źródło,</li><li><b>porównuje</b> jego treść z innymi relacjami i wiadomościami.</li></ul>
+  <h3><span class="hl-p">Przykład: bitwa na Psim Polu</span></h3>
+  <ol>
+    <li><b>Wzmianka w kronice</b> – Wincenty Kadłubek 800 lat temu opisał zwycięstwo Polaków nad Niemcami na Psim Polu (dziś dzielnica Wrocławia).</li>
+    <li><b>Pierwsze pytania</b> – czy do bitwy naprawdę doszło? Czy potwierdzają to inne źródła?</li>
+    <li><b>Porównanie źródeł</b> – wcześniejsi kronikarze milczą o tej bitwie.</li>
+    <li><b>Badanie stanu wiedzy</b> – archeolodzy nie znaleźli żadnych śladów starcia.</li>
+    <li><b>Wyciąganie wniosków</b> – do bitwy nie doszło. Historyk pisze o tym książkę lub artykuł.</li>
+  </ol>
+`},
+ {id:'przyczyny', name:'Przyczyny i skutki', html:`
+  <h2>Od przyczyn do skutków</h2>
+  <p>Ulubione pytanie historyków to: <b>dlaczego?</b></p>
+  <div class="cols">
+    <div><h3><span class="hl-o">Przyczyny</span></h3><p>Działania lub zdarzenia, które doprowadziły do wydarzenia. <i>Dlaczego do tego doszło?</i></p></div>
+    <div><h3><span class="hl-c">Skutki</span></h3><p>Dalsze przemiany, które wydarzenie wywołało. <i>Co z tego wynikło?</i></p></div>
+  </div>
+  <p class="def"><span class="hl-p">Związki przyczynowo-skutkowe</span> to związki między wydarzeniami, które miały na siebie bezpośredni wpływ – jedno prowadziło do kolejnego.</p>
+  <h3>Przykład: wynalezienie druku</h3>
+  <div class="cols">
+    <div><p><b>Przyczyny</b></p><ul><li>powolne, ręczne wytwarzanie książek</li><li>bardzo wysoka cena książek</li></ul></div>
+    <div><p><b>Wydarzenie</b></p><ul><li>wynalezienie druku przez niemieckiego drukarza Jana Gutenberga</li></ul></div>
+    <div><p><b>Skutki</b></p><ul><li>niższe ceny książek</li><li>rozwój szkolnictwa</li><li>rozwój kultury i literatury</li></ul></div>
+  </div>`},
+ {id:'rodzina', name:'Historia mojej rodziny', html:`
+  <h2>Historia mojej rodziny</h2>
+  <p>Przeszłość rodziny poznajemy dzięki źródłom. Najważniejsze to:</p>
+  <ul>
+    <li><b>opowieści krewnych</b> i znajomych – o tym, czym zajmowali się nasi przodkowie, gdzie mieszkali, co lubili,</li>
+    <li><b>pamiątki rodzinne</b> – wszystkie przedmioty związane z rodziną: zdjęcia, dokumenty, listy, ale też zegarki, biżuteria, zabawki.</li>
+  </ul>
+  <p>Dawniej historie rodzinne przekazywano <b>ustnie</b> z pokolenia na pokolenie. Dziś możemy je nagrać, żeby nie zostały zapomniane.</p>
+  <div class="cols">
+    <p class="def"><span class="hl-c">Krewni</span> – osoby połączone więzami krwi, pochodzące od wspólnego przodka.</p>
+    <p class="def"><span class="hl-c">Pokolenie</span> – grupa osób w podobnym wieku.</p>
+  </div>
+  <h3><span class="hl-o">Tradycje rodzinne</span></h3>
+  <p>To między innymi <b>zwyczaje, które wzmacniają więź</b> między krewnymi i pozwalają rodzinie utrzymać bliski kontakt. Mogą to być:</p>
+  <ul><li>obchody świąt (co roku tak samo),</li><li>wspólne wyjazdy,</li><li>ten sam zawód w rodzinie,</li><li>zamiłowanie do muzyki lub sportu,</li><li>przepis na ciasto przekazywany przez lata.</li></ul>`},
+ {id:'drzewo', name:'Drzewo genealogiczne', html:`
+  <h2>Drzewo genealogiczne</h2>
+  <p class="def"><span class="hl-p">Genealogia</span> – nauka zajmująca się badaniem historii rodziny i więzi między jej członkami.</p>
+  <p class="def"><span class="hl-p">Drzewo genealogiczne</span> – schemat pokazujący powiązania między członkami rodziny z różnych pokoleń. Wpisujemy imiona, nazwiska, daty życia, czasem zawody i zdjęcia.</p>
+  <ul>
+    <li><b>Najstarsi przodkowie</b> – na samym dole, na pniu drzewa.</li>
+    <li><b>Kolejne pokolenia</b> – na różnej wysokości.</li>
+    <li><b>Najmłodsi</b> – na samej górze, na szczycie drzewa.</li>
+  </ul>
+  <p>Obrączki oznaczają małżeństwo. Kliknij osobę na drzewie, żeby zobaczyć, kim jest dla „Ja”.</p>
+  <div class="tree-learn"><div id="learn-tree"></div><p class="compass-say" id="tree-say" aria-live="polite">Kliknij osobę</p></div>
+  <p>Na tym drzewie są <b>4 pokolenia</b>. Kasia jest babcią Zuzi, „Ja” i Kuby. Teresa (siostra babci) jest ciocią Tomasza i Piotra.</p>`},
+];
+
+const EVENTS=[
+ {y:1492,e:'Krzysztof Kolumb odkrył Amerykę'},
+ {y:1911,e:'Maria Skłodowska-Curie dostała Nagrodę Nobla'},
+ {y:1918,e:'Polska odzyskała niepodległość'},
+];
+const SRC = {
+ cats:['materialne – pisane','materialne – niepisane','niematerialne'],
+ items:[
+  ['kronika','list','pamiętnik','gazeta','stara mapa','dokument','napis na pomniku'],
+  ['ruiny zamku','obraz','rzeźba','miecz','zdjęcie','potłuczony garnek','biżuteria'],
+  ['tradycja','obyczaje','opowieść dziadka','stara pieśń','zwyczaje wigilijne'],
+ ]};
+const CHARS = {
+ cats:['baśniowa','legendarna','historyczna'],
+ items:[
+  ['Królewna Śnieżka'],
+  ['Robin Hood','Smok Wawelski'],
+  ['Stanisław August Poniatowski','Maria Skłodowska-Curie','Krzysztof Kolumb','Bolesław Chrobry'],
+ ]};
+function sortGen(src, per){
+  const items=[]; src.items.forEach((arr,c)=>shuffle(arr).slice(0,per).forEach(x=>items.push({x,c})));
+  return shuffle(items);
+}
+const PEOPLE = [
+ {n:'Zuzia',r:'moja siostra',cx:180,y:20},{n:'Ja',r:'',cx:310,y:20},{n:'Kuba',r:'mój brat',cx:440,y:20},
+ {n:'Joanna',r:'mama',cx:180,y:130},{n:'Tomasz',r:'tata',cx:330,y:130},{n:'Piotr',r:'stryj, brat taty',cx:490,y:130},
+ {n:'Teresa',r:'siostra babci',cx:120,y:240},{n:'Kasia',r:'babcia',cx:270,y:240},{n:'Stefan',r:'dziadek',cx:430,y:240},
+ {n:'Helena',r:'prababcia',cx:220,y:350},{n:'Zbigniew',r:'pradziadek',cx:370,y:350},
+];
+const RELS = ['babcia','dziadek','prababcia','pradziadek','mama','tata','siostra','brat','stryj (brat taty)','ciocia','siostra babci'];
+const TREEQ = [['Kasia','babcia'],['Stefan','dziadek'],['Helena','prababcia'],['Zbigniew','pradziadek'],['Piotr','stryj (brat taty)'],['Tomasz','tata'],['Kuba','brat'],['Teresa','siostra babci']];
+
+/* Bank pytań. single: pierwsza odpowiedź jest poprawna (kolejność jest losowana). */
+const BANK = [
+ // ---- historia
+ {topic:'historia',t:'multi',q:'Zaznacz znaczenia słowa „historia”.',ok:['opowieść','przeszłość','nauka o przeszłości ludzi'],no:['wymyślona baśń o smokach','plan na przyszłość'],why:'Historia to: opowieść, przeszłość („to już historia”) i nauka o przeszłości ludzi.'},
+ {topic:'historia',t:'single',q:'Gdy ktoś mówi „to już historia”, ma na myśli, że…',opts:['coś się skończyło i należy do przeszłości','chce usłyszeć ciekawą opowieść','coś dopiero się zacznie','to nieprawda'],why:'„To już historia” – coś się skończyło i należy do przeszłości.'},
+ {topic:'historia',t:'single',q:'Historia jako nauka zajmuje się…',opts:['przeszłością ludzi','przyszłością ludzi','tylko królami i bitwami','wymyślonymi opowieściami'],why:'Historia to nauka o przeszłości wszystkich ludzi.'},
+ {topic:'historia',t:'tf',q:'Każdy człowiek i każda rodzina mają swoją historię.',a:true,why:'Tak – historia dotyczy także Ciebie i Twojej rodziny.'},
+ {topic:'historia',t:'multi',q:'Po co nam historia?',ok:['żeby lepiej zrozumieć świat','żeby przewidywać skutki naszych działań','postacie historyczne mogą być wzorem'],no:['daje gotowe rozwiązania na każdą sytuację','pozwala dokładnie przepowiedzieć przyszłość'],why:'Historia pomaga zrozumieć świat i przewidywać skutki działań. Nie daje gotowych rozwiązań, bo każda epoka jest inna.'},
+ {topic:'historia',t:'tf',q:'Historia daje nam gotowe rozwiązania na każdy problem.',a:false,why:'Nie – świat się zmienia i każda epoka jest inna. Możemy jednak uczyć się na błędach przodków.'},
+ {topic:'historia',t:'multi',q:'Czego nauczysz się na lekcjach historii?',ok:['zbierać informacje i sprawdzać, czy są prawdziwe','rozpoznawać przyczyny i skutki wydarzeń','tworzyć własną opowieść ze sprawdzonych faktów'],no:['wymyślać baśnie','zgadywać daty'],why:'Nauczysz się zbierać i sprawdzać informacje, rozpoznawać przyczyny i skutki oraz tworzyć opowieść z faktów.'},
+ {topic:'historia',t:'gen',make(){const ev=pick(EVENTS),o=EVENTS.filter(x=>x!==ev);return {t:'single',q:`Co wydarzyło się w ${ev.y} roku?`,opts:[ev.e,...o.map(x=>x.e),'zbudowano pierwszy samochód'],why:`${ev.y} – ${ev.e}.`}}},
+ {topic:'historia',t:'gen',make(){const ev=pick(EVENTS),ys=[1492,1911,1918,1966].filter(y=>y!==ev.y);return {t:'single',q:`W którym roku: ${ev.e.charAt(0).toLowerCase()+ev.e.slice(1)}?`,opts:[String(ev.y),...ys.map(String)],why:`${ev.e} w ${ev.y} roku.`}}},
+ {topic:'historia',t:'order',q:'Ułóż wydarzenia od najdawniejszego do najnowszego.',items:['Kolumb odkrył Amerykę','Maria Skłodowska-Curie dostała Nagrodę Nobla','Polska odzyskała niepodległość','Pradziadkowie z podręcznika przyjechali do Gdańska'],why:'1492 → 1911 → 1918 → 1946.'},
+
+ // ---- postacie
+ {topic:'postacie',t:'gen',make(){return {t:'sort',q:'Jaka to postać? Przypisz każdą do właściwej grupy.',cats:CHARS.cats,items:sortGen(CHARS,2),why:'Baśniowe – wymyślone; legendarne – wymyślone, ale w legendach jest też trochę prawdy; historyczne – żyły naprawdę.'}}},
+ {topic:'postacie',t:'single',q:'Smok Wawelski to postać…',opts:['legendarna','baśniowa','historyczna','z gazety'],why:'Smok Wawelski występuje w legendzie o Krakowie.'},
+ {topic:'postacie',t:'single',q:'Czym różni się historia od baśni i legendy?',opts:['opisuje ludzi, którzy żyli naprawdę, i wydarzenia, które się naprawdę odbyły','jest dłuższa','zawsze zaczyna się od „dawno, dawno temu”','opowiada o smokach'],why:'Historia opowiada o prawdziwych ludziach i wydarzeniach. Baśnie i legendy są wymyślone.'},
+ {topic:'postacie',t:'single',q:'Postacie baśniowe…',opts:['zostały wymyślone, a ich losy toczą się w nieokreślonym miejscu i czasie','żyły naprawdę','zawsze są królami Polski','występują w kronikach'],why:'Baśń dzieje się „dawno, dawno temu” – nie wiadomo gdzie i kiedy.'},
+ {topic:'postacie',t:'single',q:'W legendach…',opts:['prawda miesza się z nieprawdą','wszystko jest prawdziwe','nie ma żadnych prawdziwych miejsc','występują tylko zwierzęta'],why:'Postacie legendarne są wymyślone, ale w legendach są też prawdziwe osoby, miejsca i wydarzenia.'},
+ {topic:'postacie',t:'single',q:'Co jest najważniejsze dla historyków?',opts:['prawda','ciekawa fabuła','szczęśliwe zakończenie','piękne obrazki'],why:'Najważniejsza dla historyków jest prawda.'},
+ {topic:'postacie',t:'single',q:'Kto zajmuje się badaniem przeszłości?',opts:['historycy','pisarze baśni','geografowie','aktorzy'],why:'Badaniem przeszłości zajmują się historycy.'},
+ {topic:'postacie',t:'single',q:'Stanisław August Poniatowski to…',opts:['król Polski – postać historyczna','bohater baśni','postać z legendy o smoku','wymyślony podróżnik'],why:'To prawdziwy król Polski, więc postać historyczna.'},
+
+ // ---- źródła
+ {topic:'zrodla',t:'gen',make(){return {t:'sort',q:'Do jakiej grupy należy każde źródło?',cats:SRC.cats,items:sortGen(SRC,2),why:'Pisane – coś zapisano; niepisane – można dotknąć, ale nie jest tekstem; niematerialne – nie można dotknąć.'}}},
+ {topic:'zrodla',t:'single',q:'Źródła historyczne to…',opts:['wszystkie ślady działalności człowieka z minionych czasów','tylko stare książki','wyłącznie dokumenty z urzędu','opowieści wymyślone przez pisarzy'],why:'Źródłem może być każdy ślad działalności człowieka.'},
+ {topic:'zrodla',t:'single',q:'Do jakiej grupy źródeł należą ustne opowieści o przeszłości?',opts:['niematerialnych','materialnych – pisanych','materialnych – niepisanych','to nie są źródła'],why:'Przekazy ustne to źródła niematerialne – nie można ich dotknąć.'},
+ {topic:'zrodla',t:'single',q:'Źródła niematerialne to takie, których…',opts:['nie można dotknąć','nie można przeczytać','nikt nie zna','nie ma w muzeum'],why:'Niematerialne – takie, których nie można dotknąć, np. tradycja, obyczaje.'},
+ {topic:'zrodla',t:'tf',q:'Wszystko, co wytwarzamy dziś, może w przyszłości stać się źródłem historycznym.',a:true,why:'Tak – nawet przedmioty z Twojego plecaka.'},
+ {topic:'zrodla',t:'single',q:'Archeolodzy szukają…',opts:['materialnych śladów działalności człowieka','nowych gwiazd na niebie','wymyślonych postaci','tylko złota'],why:'Archeolodzy szukają materialnych śladów i określają, kiedy powstały.'},
+ {topic:'zrodla',t:'single',q:'Wykopaliska to…',opts:['prace pozwalające odnaleźć przedmioty ukryte pod ziemią','budowa nowej drogi','szukanie książek w bibliotece','sadzenie drzew'],why:'Wykopaliska to ważna metoda pracy archeologów.'},
+ {topic:'zrodla',t:'tf',q:'Przedmioty znalezione przez archeologów są źródłami historycznymi.',a:true,why:'Tak – to materialne ślady działalności człowieka.'},
+ {topic:'zrodla',t:'single',q:'Pierwsze źródło z nazwą „Polska” to…',opts:['maleńka moneta z czasów Bolesława Chrobrego','gruba kronika','obraz króla','list do papieża'],why:'To moneta sprzed tysiąca lat, ma tylko 19 mm średnicy.'},
+
+ // ---- wiarygodność
+ {topic:'wiarygodnosc',t:'single',q:'Wiarygodność źródła to…',opts:['to, na ile można mu ufać i na ile informacje w nim są pewne','to, jak stare jest źródło','to, czy źródło jest ładne','cena źródła w antykwariacie'],why:'Wiarygodność – na ile informacje są pewne.'},
+ {topic:'wiarygodnosc',t:'multi',q:'Jak historyk ocenia wiarygodność źródła?',ok:['ustala, kto, kiedy i w jakim celu je stworzył','porównuje je z innymi źródłami'],no:['wierzy w każdy dokument','sprawdza, czy ma ładne obrazki'],why:'Historyk ustala autora, czas i cel, a potem porównuje treść z innymi relacjami.'},
+ {topic:'wiarygodnosc',t:'tf',q:'Kroniki zawsze zawierają tylko prawdziwe informacje.',a:false,why:'Kroniki czasem zawierają nieprawdę, a dokumenty bywają sfałszowane.'},
+ {topic:'wiarygodnosc',t:'order',q:'Ułóż etapy oceny wiarygodności źródła (przykład z Psim Polem).',items:['Wzmianka w kronice','Pierwsze pytania','Porównanie źródeł','Badanie stanu wiedzy','Wyciąganie wniosków'],why:'Wzmianka → pytania → porównanie źródeł → stan wiedzy → wnioski.'},
+ {topic:'wiarygodnosc',t:'single',q:'Dlaczego historycy uznali opis bitwy na Psim Polu za niewiarygodny?',opts:['wcześniejsi kronikarze o niej milczą, a archeolodzy nie znaleźli śladów','bo kronika była za krótka','bo Kadłubek pisał brzydko','bo Psie Pole jest we Wrocławiu'],why:'Inne źródła nie potwierdzają bitwy i nie ma śladów starcia – dlatego do bitwy nie doszło.'},
+ {topic:'wiarygodnosc',t:'single',q:'Kto opisał bitwę na Psim Polu w swojej kronice?',opts:['Wincenty Kadłubek','Jan Gutenberg','Krzysztof Kolumb','Stanisław August Poniatowski'],why:'Kronikę napisał Wincenty Kadłubek około 800 lat temu.'},
+ {topic:'wiarygodnosc',t:'single',q:'Jaki był wniosek historyków w sprawie bitwy na Psim Polu?',opts:['do bitwy nie doszło','Polacy przegrali','bitwa trwała 800 lat','bitwa odbyła się w Krakowie'],why:'Po zbadaniu źródeł historycy uznali, że do bitwy nie doszło.'},
+ {topic:'wiarygodnosc',t:'single',q:'Archeolodzy pomagają historykom ocenić źródło, bo…',opts:['mogą znaleźć (albo nie znaleźć) ślady opisanych wydarzeń','piszą kroniki','zawsze znają prawdę','wymyślają legendy'],why:'Gdy archeolodzy nie znajdują śladów, opis w kronice może być nieprawdziwy.'},
+
+ // ---- przyczyny
+ {topic:'przyczyny',t:'single',q:'Przyczyny wydarzenia to…',opts:['działania lub zdarzenia, które do niego doprowadziły','to, co z niego wynikło','data wydarzenia','miejsce wydarzenia'],why:'Przyczyny odpowiadają na pytanie: dlaczego do tego doszło?'},
+ {topic:'przyczyny',t:'single',q:'Skutki wydarzenia to…',opts:['dalsze przemiany, które ono wywołało','powody, dla których się wydarzyło','imiona jego uczestników','kronika, która je opisuje'],why:'Skutki odpowiadają na pytanie: co z tego wynikło?'},
+ {topic:'przyczyny',t:'single',q:'Związki przyczynowo-skutkowe to…',opts:['związki między wydarzeniami, z których jedno prowadziło do kolejnego','spis ważnych dat','drzewo genealogiczne','lista królów'],why:'Jedno wydarzenie miało bezpośredni wpływ na drugie.'},
+ {topic:'przyczyny',t:'single',q:'Kto wynalazł druk?',opts:['niemiecki drukarz Jan Gutenberg','Krzysztof Kolumb','Wincenty Kadłubek','Maria Skłodowska-Curie'],why:'Druk wynalazł Jan Gutenberg.'},
+ {topic:'przyczyny',t:'gen',make(){return {t:'sort',q:'Wynalezienie druku: co było przyczyną, a co skutkiem?',cats:['przyczyna','skutek'],items:shuffle([{x:'powolne, ręczne wytwarzanie książek',c:0},{x:'bardzo wysoka cena książek',c:0},{x:'niższe ceny książek',c:1},{x:'rozwój szkolnictwa',c:1},{x:'rozwój kultury i literatury',c:1}]),why:'Przyczyny: książki pisano ręcznie i były drogie. Skutki: tańsze książki, rozwój szkół, kultury i literatury.'}}},
+ {topic:'przyczyny',t:'single',q:'Jakie jest ulubione pytanie historyków?',opts:['Dlaczego?','Ile to kosztuje?','Kto wygrał?','Gdzie jest skarb?'],why:'Historycy chcą wiedzieć, dlaczego coś się wydarzyło.'},
+ {topic:'przyczyny',t:'tf',q:'Rozwój szkolnictwa był skutkiem wynalezienia druku.',a:true,why:'Tak – tańsze książki pomogły w rozwoju szkół.'},
+
+ // ---- rodzina
+ {topic:'rodzina',t:'single',q:'Główne źródła do badania historii rodziny to…',opts:['opowieści krewnych i pamiątki rodzinne','tylko podręcznik do historii','gazety z całego świata','wykopaliska'],why:'Najważniejsze są opowieści krewnych i pamiątki rodzinne.'},
+ {topic:'rodzina',t:'single',q:'Krewni to…',opts:['osoby połączone więzami krwi, pochodzące od wspólnego przodka','wszyscy sąsiedzi','koledzy z klasy','osoby w podobnym wieku'],why:'Krewni pochodzą od wspólnego przodka.'},
+ {topic:'rodzina',t:'single',q:'Pokolenie to…',opts:['grupa osób w podobnym wieku','wszyscy członkowie rodziny','najstarsza osoba w rodzinie','rodzinny zwyczaj'],why:'Pokolenie – grupa osób w podobnym wieku, np. Ty i Twoje rodzeństwo.'},
+ {topic:'rodzina',t:'multi',q:'Co może być pamiątką rodzinną?',ok:['stare zdjęcie','list pradziadka','zegarek dziadka','dokument babci'],no:['chmura na niebie','kamień z chodnika przed szkołą'],why:'Pamiątki to przedmioty związane z rodziną: zdjęcia, dokumenty, listy i przedmioty codziennego użytku.'},
+ {topic:'rodzina',t:'tf',q:'Pamiątki rodzinne to tylko drogie i cenne przedmioty.',a:false,why:'Pamiątką może być też zwykły przedmiot, np. zabawka.'},
+ {topic:'rodzina',t:'tf',q:'Dawniej historie rodzinne przekazywano ustnie z pokolenia na pokolenie.',a:true,why:'Tak – dziś możemy je dodatkowo nagrać.'},
+ {topic:'rodzina',t:'single',q:'Tradycje rodzinne to między innymi…',opts:['zwyczaje, które wzmacniają więź między krewnymi','zasady ruchu drogowego','szkolne oceny','spis ważnych dat'],why:'Tradycje wzmacniają więź i pomagają rodzinie utrzymać bliski kontakt.'},
+ {topic:'rodzina',t:'multi',q:'Co może być rodzinną tradycją?',ok:['obchody świąt co roku w ten sam sposób','wspólne wyjazdy','przepis na ciasto przekazywany przez lata','ten sam zawód w rodzinie'],no:['jednorazowe zakupy w sklepie'],why:'Tradycją są zwyczaje, które się powtarzają i łączą rodzinę.'},
+
+ // ---- drzewo
+ {topic:'drzewo',t:'single',q:'Genealogia to nauka zajmująca się…',opts:['badaniem historii rodziny i więzi między jej członkami','badaniem drzew w lesie','szukaniem skarbów','mierzeniem czasu'],why:'Genealogia bada historię rodziny.'},
+ {topic:'drzewo',t:'single',q:'Drzewo genealogiczne to…',opts:['schemat pokazujący powiązania między członkami rodziny z różnych pokoleń','rysunek drzewa w ogrodzie dziadków','lista zakupów','mapa okolicy'],why:'Drzewo genealogiczne pokazuje, kto z kim jest spokrewniony.'},
+ {topic:'drzewo',t:'single',q:'Gdzie na drzewie genealogicznym umieszczamy najstarszych przodków?',opts:['na samym dole, na pniu','na samej górze','z boku','nigdzie'],why:'Najstarsi są na dole – z nich „wyrasta” reszta rodziny.'},
+ {topic:'drzewo',t:'single',q:'Gdzie na drzewie genealogicznym są najmłodsi krewni?',opts:['na samej górze, na szczycie','na pniu','przy korzeniach','pośrodku'],why:'Najmłodsi są na szczycie drzewa.'},
+ {topic:'drzewo',t:'gen',make(){const [n,r]=pick(TREEQ),o=shuffle(RELS.filter(x=>x!==r)).slice(0,3);return {t:'single',tree:true,q:`Spójrz na drzewo. Kim jest ${n} dla osoby „Ja”?`,opts:[r,...o],why:`${n} to ${r} osoby „Ja”.`}}},
+ {topic:'drzewo',t:'gen',make(){const [n,r]=pick(TREEQ),o=shuffle(RELS.filter(x=>x!==r)).slice(0,3);return {t:'single',tree:true,q:`Spójrz na drzewo. Kim jest ${n} dla osoby „Ja”?`,opts:[r,...o],why:`${n} to ${r} osoby „Ja”.`}}},
+ {topic:'drzewo',t:'single',tree:true,q:'Ile pokoleń przedstawiono na tym drzewie?',opts:['4','2','3','11'],why:'Pokolenia: pradziadkowie, dziadkowie, rodzice, dzieci – razem 4.'},
+ {topic:'drzewo',t:'single',tree:true,q:'Czyją babcią jest Kasia?',opts:['Zuzi, „Ja” i Kuby','Tomasza i Piotra','Heleny','Teresy'],why:'Kasia to mama Tomasza, a Tomasz jest tatą Zuzi, „Ja” i Kuby.'},
+ {topic:'drzewo',t:'single',tree:true,q:'Czyją ciocią jest Teresa?',opts:['Tomasza i Piotra','Zuzi i Kuby','Heleny i Zbigniewa','Kasi'],why:'Teresa to siostra Kasi, a Kasia jest mamą Tomasza i Piotra.'},
+];
+
+function treeSVG({labels=true, hl=[], sel=null}={}){
+  const W=124,H=48;
+  let s=`<svg class="tree" viewBox="48 8 516 400" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Drzewo genealogiczne">`;
+  const L=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--muted)" stroke-width="2"/>`;
+  const ring=(x,y)=>`<circle cx="${x-4}" cy="${y}" r="6" fill="var(--card)" stroke="#C9A227" stroke-width="2.5"/><circle cx="${x+4}" cy="${y}" r="6" fill="none" stroke="#C9A227" stroke-width="2.5"/>`;
+  // Joanna+Tomasz -> dzieci
+  s+=L(242,154,268,154)+L(255,154,255,100)+L(180,100,440,100)+L(180,100,180,68)+L(310,100,310,68)+L(440,100,440,68);
+  // Kasia+Stefan -> Tomasz, Piotr
+  s+=L(332,264,368,264)+L(350,264,350,210)+L(330,210,490,210)+L(330,210,330,178)+L(490,210,490,178);
+  // Helena+Zbigniew -> Teresa, Kasia
+  s+=L(282,374,308,374)+L(295,374,295,320)+L(120,320,270,320)+L(120,320,120,288)+L(270,320,270,288);
+  s+=ring(255,154)+ring(350,264)+ring(295,374);
+  PEOPLE.forEach(p=>{
+    const x=p.cx-W/2, on=hl.includes(p.n)||sel===p.n;
+    s+=`<g class="tp" data-n="${p.n}" ${labels?'tabindex="0" role="button"':''} aria-label="${p.n}${labels&&p.r?', '+p.r:''}">`;
+    s+=`<rect x="${x}" y="${p.y}" width="${W}" height="${H}" rx="8" fill="${on?'var(--pink)':'var(--card)'}" stroke="var(--ink)" stroke-width="${on?2.5:1.5}"/>`;
+    if(labels&&p.r){ s+=`<text x="${p.cx}" y="${p.y+21}" text-anchor="middle" class="tn">${p.n}</text><text x="${p.cx}" y="${p.y+38}" text-anchor="middle" class="tr">(${p.r})</text>`; }
+    else s+=`<text x="${p.cx}" y="${p.y+30}" text-anchor="middle" class="tn">${p.n}</text>`;
+    s+=`</g>`;
+  });
+  return s+`</svg>`;
+}
+
+/* ================= POMOCNICZE ================= */
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function fmt(n){return String(Math.round(n*10)/10).replace('.',',')}
+function store(k,v){try{if(v===undefined){const r=localStorage.getItem(k);return r?JSON.parse(r):null}localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+const topicName = id => TOPICS.find(t=>t.id===id).name;
+
+function getScale(){const s=store('h4-scale');return s&&s[2]!=null?s:{...DEFAULT_SCALE}}
+function gradeFor(pct){
+  const s=getScale();
+  for(const g of [6,5,4,3,2]) if(pct>=s[g]-1e-9) return GRADES.find(x=>x.g===g);
+  return GRADES.find(x=>x.g===1);
+}
+
+/* ================= KOMPAS SVG ================= */
+function compassSVG({labels='all', states={}}={}){
+  const C=170, R=112, T=146;
+  let s=`<svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Tarcza kompasu">`;
+  s+=`<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="var(--ink)" stroke-width="2.5"/>`;
+  s+=`<circle cx="${C}" cy="${C}" r="${R-10}" fill="none" stroke="var(--line)" stroke-width="1"/>`;
+  DIRS.forEach(d=>{
+    const rad=d.a*Math.PI/180, len=d.k.length===1?R:R*0.72;
+    s+=`<line x1="${C}" y1="${C}" x2="${C+len*Math.cos(rad)}" y2="${C+len*Math.sin(rad)}" stroke="var(--line)" stroke-width="${d.k.length===1?2:1.2}"/>`;
+  });
+  s+=`<polygon points="${C},${C-92} ${C-9},${C} ${C+9},${C}" fill="#E03131"/>`;
+  s+=`<polygon points="${C},${C+92} ${C-9},${C} ${C+9},${C}" fill="#8A94A8"/>`;
+  s+=`<circle cx="${C}" cy="${C}" r="6" fill="var(--ink)"/>`;
+  DIRS.forEach((d,i)=>{
+    const rad=d.a*Math.PI/180, x=C+T*Math.cos(rad), y=C+T*Math.sin(rad);
+    const show = labels==='all' || d.k==='N';
+    const st = states[d.k]||'';
+    const aria = show ? d.k : `punkt ${i+1} na tarczy`;
+    s+=`<g class="cdir ${st}" data-k="${d.k}" tabindex="0" role="button" aria-label="${aria}"><circle cx="${x}" cy="${y}" r="22"/><text x="${x}" y="${y+5}" text-anchor="middle">${show?d.k:''}</text></g>`;
+  });
+  return s+`</svg>`;
+}
+function bindCompass(root, onPick){
+  root.querySelectorAll('.cdir').forEach(g=>{
+    g.addEventListener('click',()=>onPick(g.dataset.k));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onPick(g.dataset.k)}});
+  });
+}
+
+/* ================= STAN ================= */
+const S = {
+  view:'learn', topic:'historia',
+  setup:{topics:TOPICS.map(t=>t.id), count:20, instant:true},
+  quiz:null,
+};
+const saved = store('h4-setup'); if(saved) Object.assign(S.setup, saved);
+
+const main = document.getElementById('main');
+document.getElementById('tab-learn').onclick=()=>go('learn');
+document.getElementById('tab-test').onclick=()=>{ if(S.view!=='quiz') go('setup'); else go('quiz'); };
+
+function go(v){
+  S.view=v;
+  document.getElementById('tab-learn').setAttribute('aria-current', v==='learn');
+  document.getElementById('tab-test').setAttribute('aria-current', v!=='learn');
+  render(); window.scrollTo({top:0});
+}
+function render(){
+  if(S.view==='learn') return renderLearn();
+  if(S.view==='setup') return renderSetup();
+  if(S.view==='quiz') return renderQuiz();
+  if(S.view==='results') return renderResults();
+}
+
+/* ================= NAUKA ================= */
+function renderLearn(){
+  const t=TOPICS.find(x=>x.id===S.topic);
+  main.innerHTML=`<div class="learn">
+    <div class="toc" role="list">${TOPICS.map((x,i)=>`<button role="listitem" data-id="${x.id}" aria-current="${x.id===S.topic}"><span class="n">${i+1}.</span>${x.name}</button>`).join('')}</div>
+    <article class="sheet">${t.html}
+      <div class="sheet-actions">
+        <button class="btn" id="test-this">Sprawdź się z tego działu</button>
+        ${TOPICS.indexOf(t)<TOPICS.length-1?`<button class="btn ghost" id="next-topic">Następny dział</button>`:''}
+      </div>
+    </article></div>`;
+  main.querySelectorAll('.toc button').forEach(b=>b.onclick=()=>{S.topic=b.dataset.id;renderLearn()});
+  document.getElementById('test-this').onclick=()=>startQuiz(poolFor([t.id]),Infinity);
+  const nx=document.getElementById('next-topic');
+  if(nx) nx.onclick=()=>{S.topic=TOPICS[TOPICS.indexOf(t)+1].id;renderLearn();window.scrollTo({top:0})};
+  const lt=document.getElementById('learn-tree');
+  if(lt){
+    const drawT=(n)=>{lt.innerHTML=treeSVG({labels:true,sel:n});lt.querySelectorAll('.tp').forEach(g=>{const pick1=()=>{const p=PEOPLE.find(x=>x.n===g.dataset.n);document.getElementById('tree-say').textContent=p.r?`${p.n} – ${p.r}`:'To Ty!';drawT(p.n);lt.querySelector(`[data-n="${p.n}"]`).focus()};g.onclick=pick1;g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick1()}}})};
+    drawT(null);
+  }
+  const lc=document.getElementById('learn-compass');
+  if(lc){
+    const draw=(k)=>{lc.innerHTML=compassSVG({states:k?{[k]:'sel'}:{}});bindCompass(lc,kk=>{const d=DIRS.find(x=>x.k===kk);document.getElementById('compass-say').textContent=`${d.k} = ${d.name}`;draw(kk);lc.querySelector(`[data-k="${kk}"]`).focus()})};
+    draw('N');
+  }
+}
+
+/* ================= USTAWIENIA TESTU ================= */
+function renderSetup(){
+  const sc=getScale(), hist=store('h4-history')||[];
+  const n=poolFor(S.setup.topics).length;
+  main.innerHTML=`<section class="panel">
+    <h2>Test z historii</h2>
+    <p class="sub">Wybierz działy i liczbę pytań. Każde pytanie to 1 punkt. Na końcu dostaniesz ocenę.</p>
+    <div class="field"><span class="lbl">Działy</span>
+      <div class="chips">${TOPICS.map(t=>`<button class="chip" data-id="${t.id}" aria-pressed="${S.setup.topics.includes(t.id)}">${t.name}</button>`).join('')}</div>
+    </div>
+    <div class="field"><span class="lbl">Liczba pytań</span>
+      <div class="chips">${[10,20,'all'].map(c=>`<button class="chip" data-count="${c}" aria-pressed="${String(S.setup.count)===String(c)}">${c==='all'?`Wszystkie (${n})`:c}</button>`).join('')}</div>
+    </div>
+    <div class="field"><label class="toggle"><input type="checkbox" id="instant" ${S.setup.instant?'checked':''}> Pokazuj od razu, czy odpowiedź jest dobra (tryb nauki)</label>
+      <p class="qhint" style="margin:6px 0 0 30px">Wyłącz, żeby pisać jak na prawdziwym sprawdzianie – wyniki zobaczysz na końcu.</p></div>
+    <button class="btn" id="start" ${S.setup.topics.length?'':'disabled'}>Rozpocznij test</button>
+    <details><summary>Skala ocen (możesz dopasować do swojej szkoły)</summary>
+      <table class="scale"><tbody>
+      ${[6,5,4,3,2].map(g=>`<tr><td><b>${g}</b></td><td>${GRADES.find(x=>x.g===g).name}</td><td>od <input type="number" min="0" max="100" data-g="${g}" value="${sc[g]}"> %</td></tr>`).join('')}
+      <tr><td><b>1</b></td><td>niedostateczny</td><td>poniżej ${sc[2]} %</td></tr>
+      </tbody></table>
+      <button class="btn ghost" id="reset-scale" style="margin-top:10px;padding:6px 14px">Przywróć domyślną skalę</button>
+    </details>
+    ${hist.length?`<div class="history"><b>Ostatnie wyniki</b><ol>${hist.slice(0,6).map(h=>`<li>${new Date(h.d).toLocaleDateString('pl-PL')} – ocena <b>${h.g}</b> (${fmt(h.pts)}/${h.max} pkt, ${Math.round(h.pct)}%)</li>`).join('')}</ol></div>`:''}
+  </section>`;
+  main.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.id, ts=S.setup.topics;
+    S.setup.topics = ts.includes(id)? ts.filter(x=>x!==id) : [...ts,id];
+    store('h4-setup',S.setup); renderSetup();
+  });
+  main.querySelectorAll('[data-count]').forEach(b=>b.onclick=()=>{S.setup.count=b.dataset.count==='all'?'all':+b.dataset.count;store('h4-setup',S.setup);renderSetup()});
+  document.getElementById('instant').onchange=e=>{S.setup.instant=e.target.checked;store('h4-setup',S.setup)};
+  document.getElementById('start').onclick=()=>startQuiz(poolFor(S.setup.topics), S.setup.count==='all'?Infinity:S.setup.count);
+  main.querySelectorAll('.scale input').forEach(inp=>inp.onchange=()=>{
+    const s=getScale(); s[inp.dataset.g]=Math.max(0,Math.min(100,+inp.value||0)); store('h4-scale',s); renderSetup();
+    main.querySelector('details').open=true;
+  });
+  document.getElementById('reset-scale').onclick=()=>{store('h4-scale',{...DEFAULT_SCALE});renderSetup();main.querySelector('details').open=true};
+}
+function poolFor(topics){return BANK.filter(q=>topics.includes(q.topic))}
+
+/* ================= QUIZ ================= */
+function instantiate(src){
+  let q = src.t==='gen' ? src.make() : {...src};
+  q.src=src; q.topic=src.topic; q.user=null; q.checked=false; q.score=0;
+  if(q.t==='single') q.opts=shuffle(q.opts.map((x,i)=>({x,ok:i===0})));
+  if(q.t==='tf'){ q.opts=[{x:'Prawda',ok:q.a===true},{x:'Fałsz',ok:q.a===false}]; }
+  if(q.t==='multi'){ q.opts=shuffle(q.ok.map(x=>({x,ok:true})).concat(q.no.map(x=>({x,ok:false})))); q.user=new Set(); }
+  if(q.t==='sort'){ q.user=q.items.map(()=>null); }
+  if(q.t==='order'){ let c; do{c=shuffle(q.items.map((_,i)=>i))}while(c.every((v,i)=>v===i)); q.user=c; }
+  return q;
+}
+function startQuiz(pool, count){
+  const srcs = shuffle(pool).slice(0, Math.min(count, pool.length));
+  S.quiz = {qs:srcs.map(instantiate), i:0, instant:S.setup.instant};
+  go('quiz');
+}
+function answered(q){
+  if(q.t==='multi') return q.user.size>0;
+  if(q.t==='order') return true;
+  if(q.t==='sort') return q.user.every(v=>v!==null);
+  if(q.t==='num') return q.user!==null && String(q.user).trim()!=='';
+  return q.user!==null;
+}
+function grade1(q){
+  if(q.t==='single'||q.t==='tf'){
+    q.score = q.opts[q.user].ok?1:0;
+    q.userText=q.opts[q.user].x; q.correctText=q.opts.find(o=>o.ok).x;
+  } else if(q.t==='multi'){
+    const total=q.opts.filter(o=>o.ok).length;
+    let good=0,bad=0; q.user.forEach(i=>q.opts[i].ok?good++:bad++);
+    q.score = (bad===0&&good===total)?1 : (bad===0&&good>=total/2)?0.5 : 0;
+    q.userText=[...q.user].map(i=>q.opts[i].x).join(', ');
+    q.correctText=q.opts.filter(o=>o.ok).map(o=>o.x).join(', ');
+  } else if(q.t==='order'){
+    const right=q.user.filter((v,i)=>v===i).length;
+    q.score = right===q.items.length?1 : right>=3?0.5 : 0;
+    q.userText=q.user.map((v,i)=>`${i+1}. ${q.items[v]}`).join('; ');
+    q.correctText=q.items.map((x,i)=>`${i+1}. ${x}`).join('; ');
+  } else if(q.t==='num'){
+    const n=parseInt(String(q.user).replace(/\s/g,''),10);
+    q.score = n===q.a?1:0;
+    q.userText=String(q.user); q.correctText=String(q.a);
+  } else if(q.t==='compass'){
+    q.score = q.user===q.target?1:0;
+    const u=DIRS.find(d=>d.k===q.user), c=DIRS.find(d=>d.k===q.target);
+    q.userText=`${u.name} (${u.k})`; q.correctText=`${c.name} (${c.k})`;
+  }
+  else if(q.t==='sort'){
+    const right=q.items.filter((it,i)=>q.user[i]===it.c).length, n=q.items.length;
+    q.score = right===n?1 : right>=Math.ceil(n*0.7)?0.5 : 0;
+    q.userText=q.items.map((it,i)=>`${it.x} → ${q.cats[q.user[i]]}`).join('; ');
+    q.correctText=q.items.map(it=>`${it.x} → ${q.cats[it.c]}`).join('; ');
+  }
+  q.checked=true;
+}
+
+function renderQuiz(){
+  const Z=S.quiz, q=Z.qs[Z.i], last=Z.i===Z.qs.length-1, locked=q.checked&&Z.instant;
+  const hint = {single:'Wybierz jedną odpowiedź.',tf:'Prawda czy fałsz?',multi:'Zaznacz wszystkie poprawne odpowiedzi.',order:'Przesuwaj strzałkami, aż kolejność będzie dobra.',num:'Wpisz liczbę.',compass:'Kliknij kółko na tarczy.',sort:'Przy każdym elemencie wybierz właściwą grupę.'}[q.t];
+  let area='';
+  if(q.t==='single'||q.t==='tf'){
+    area=`<div class="opts ${q.t==='tf'?'tf':''}">${q.opts.map((o,i)=>{
+      let c=''; if(locked){ if(o.ok) c='ok'; else if(q.user===i) c='no'; } else if(q.user===i) c='sel';
+      const mark = locked? (o.ok?'✓':(q.user===i?'✗':'')) : (q.user===i?'●':'');
+      return `<button class="opt round ${c}" data-i="${i}" ${locked?'disabled':''}><span class="box">${mark}</span>${esc(o.x)}</button>`}).join('')}</div>`;
+  } else if(q.t==='multi'){
+    area=`<div class="opts">${q.opts.map((o,i)=>{
+      const on=q.user.has(i); let c='';
+      if(locked){ if(o.ok&&on) c='ok'; else if(!o.ok&&on) c='no'; else if(o.ok) c='ok'; } else if(on) c='sel';
+      const mark = locked? (o.ok?'✓':(on?'✗':'')) : (on?'✓':'');
+      return `<button class="opt ${c}" data-i="${i}" aria-pressed="${on}" ${locked?'disabled':''}><span class="box">${mark}</span>${esc(o.x)}${locked&&o.ok&&!on?' <small>(pominięte)</small>':''}</button>`}).join('')}</div>`;
+  } else if(q.t==='order'){
+    area=`<ol class="order">${q.user.map((v,pos)=>{
+      const c = locked ? (v===pos?'ok':'no') : '';
+      return `<li class="${c}"><span class="pos">${pos+1}</span><span class="txt">${esc(q.items[v])}</span>${locked?'':`<span class="mv"><button data-up="${pos}" aria-label="Przesuń wyżej" ${pos===0?'disabled':''}>▲</button><button data-down="${pos}" aria-label="Przesuń niżej" ${pos===q.user.length-1?'disabled':''}>▼</button></span>`}</li>`}).join('')}</ol>`;
+  } else if(q.t==='num'){
+    const c = locked?(q.score?'ok':'no'):'';
+    area=`<div class="num"><input id="numin" class="${c}" type="text" inputmode="numeric" autocomplete="off" value="${q.user!=null?esc(q.user):''}" ${locked?'disabled':''} aria-label="Twoja odpowiedź"> <span>razy</span></div>`;
+  } else if(q.t==='compass'){
+    const st={}; if(locked){ st[q.target]='ok'; if(q.user!==q.target) st[q.user]='no'; } else if(q.user) st[q.user]='sel';
+    area=`<div class="compass-q">${compassSVG({labels:q.show?'all':'north',states:st})}</div>`;
+  }
+  if(q.t==='sort'){
+    area=`<ul class="sort">${q.items.map((it,i)=>{
+      const rowc = locked ? (q.user[i]===it.c?'ok':'no') : '';
+      return `<li class="${rowc}"><span class="txt">${esc(it.x)}</span><span class="cats">${q.cats.map((c,ci)=>{
+        let cc=''; if(locked){ if(ci===it.c) cc='ok'; else if(q.user[i]===ci) cc='no'; } else if(q.user[i]===ci) cc='sel';
+        return `<button class="cat ${cc}" data-si="${i}" data-ci="${ci}" aria-pressed="${q.user[i]===ci}" ${locked?'disabled':''}>${esc(c)}</button>`}).join('')}</span></li>`}).join('')}</ul>`;
+  }
+  if(q.tree) area=`<div class="tree-q">${treeSVG({labels:false,hl:['Ja']})}</div>`+area;
+  let fb='';
+  if(locked){
+    const cls=q.score===1?'ok':q.score>0?'half':'no';
+    const head=q.score===1?'✓ Dobrze! +1 pkt':q.score>0?'½ Częściowo dobrze, +0,5 pkt':'✗ Niestety źle';
+    fb=`<div class="feedback ${cls}" role="status"><b>${head}</b>${q.score<1?`Poprawnie: ${esc(q.correctText)}<br>`:''}${esc(q.why)}</div>`;
+  }
+  const pct = ((Z.i + (q.checked?1:0)) / Z.qs.length)*100;
+  const btnLabel = Z.instant && !q.checked ? 'Sprawdź' : (last?'Zakończ test':'Dalej');
+  main.innerHTML=`<section class="panel">
+    <div class="progress"><i style="width:${pct}%"></i></div>
+    <div class="qmeta"><span>Pytanie ${Z.i+1} z ${Z.qs.length}</span><span>${topicName(q.topic)}</span></div>
+    <p class="qtext">${esc(q.q)}</p><p class="qhint">${hint}</p>
+    ${area}${fb}
+    <div class="qactions"><button class="btn ghost" id="quit">Przerwij</button><button class="btn" id="next" ${answered(q)?'':'disabled'}>${btnLabel}</button></div>
+  </section>`;
+
+  if(!locked){
+    main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const i=+b.dataset.i;
+      if(q.t==='multi'){ q.user.has(i)?q.user.delete(i):q.user.add(i); } else q.user=i;
+      renderQuiz(); const again=main.querySelector(`.opt[data-i="${i}"]`); if(again) again.focus();
+    });
+    main.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{const p=+b.dataset.up;[q.user[p-1],q.user[p]]=[q.user[p],q.user[p-1]];renderQuiz();const f=main.querySelector(`[data-up="${p-1}"]`)||main.querySelector(`[data-down="${p-1}"]`);if(f)f.focus()});
+    main.querySelectorAll('[data-down]').forEach(b=>b.onclick=()=>{const p=+b.dataset.down;[q.user[p+1],q.user[p]]=[q.user[p],q.user[p+1]];renderQuiz();const f=main.querySelector(`[data-down="${p+1}"]`)||main.querySelector(`[data-up="${p+1}"]`);if(f)f.focus()});
+    const inp=document.getElementById('numin');
+    if(inp){ inp.oninput=()=>{q.user=inp.value;document.getElementById('next').disabled=!answered(q)};
+             inp.onkeydown=e=>{if(e.key==='Enter'&&answered(q)) nextStep()}; inp.focus(); }
+    main.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{const i=+b.dataset.si,ci=+b.dataset.ci;q.user[i]=ci;renderQuiz();const f=main.querySelector(`.cat[data-si="${i}"][data-ci="${ci}"]`);if(f)f.focus()});
+    const cq=main.querySelector('.compass-q');
+    if(cq) bindCompass(cq,k=>{q.user=k;renderQuiz();const g=main.querySelector(`.cdir[data-k="${k}"]`);if(g)g.focus()});
+  }
+  document.getElementById('next').onclick=nextStep;
+  document.getElementById('quit').onclick=()=>{ if(confirm('Przerwać test? Wynik nie zostanie zapisany.')){S.quiz=null;go('setup')} };
+}
+function nextStep(){
+  const Z=S.quiz, q=Z.qs[Z.i];
+  if(!answered(q)) return;
+  if(Z.instant && !q.checked){ grade1(q); renderQuiz(); document.getElementById('next').focus(); return; }
+  if(!q.checked) grade1(q);
+  if(Z.i<Z.qs.length-1){ Z.i++; renderQuiz(); window.scrollTo({top:0}); }
+  else finish();
+}
+function finish(){
+  const Z=S.quiz, pts=Z.qs.reduce((a,q)=>a+q.score,0), max=Z.qs.length, pct=pts/max*100, G=gradeFor(pct);
+  Z.result={pts,max,pct,G};
+  const h=store('h4-history')||[]; h.unshift({d:Date.now(),pts,max,pct,g:G.g}); store('h4-history',h.slice(0,20));
+  go('results');
+}
+
+/* ================= WYNIKI ================= */
+function renderResults(){
+  const Z=S.quiz, {pts,max,pct,G}=Z.result, wrong=Z.qs.filter(q=>q.score<1);
+  main.innerHTML=`<section class="panel">
+    <div class="result-top">
+      <div class="grade" aria-label="Ocena ${G.g}">
+        <svg viewBox="0 0 150 150" aria-hidden="true"><path d="M78 14 C 30 10, 10 50, 16 88 C 22 128, 70 142, 108 128 C 142 114, 146 62, 124 34 C 108 14, 80 8, 56 18"/></svg>
+        <div class="digit">${G.g}</div>
+      </div>
+      <div>
+        <p class="gname">${G.name}</p>
+        <p class="gsum"><b>${fmt(pts)}</b> z ${max} pkt, czyli ${Math.round(pct)}%</p>
+        <p class="gmsg">${G.msg}</p>
+      </div>
+    </div>
+    <div class="res-actions">
+      ${wrong.length?`<button class="btn" id="fix">Popraw błędy (${wrong.length})</button>`:''}
+      <button class="btn ${wrong.length?'ghost':''}" id="again">Nowy test</button>
+      <button class="btn ghost" id="tolearn">Wróć do nauki</button>
+    </div>
+    <ol class="review">${Z.qs.map((q,i)=>{
+      const cls=q.score===1?'ok':q.score>0?'half':'no', m=q.score===1?'✓':q.score>0?'½':'✗';
+      return `<li><div><span class="mark ${cls}">${m}</span><b>${i+1}.</b> ${esc(q.q)}</div>
+        ${q.score<1?`<p class="row">Twoja odpowiedź: ${esc(q.userText)}</p><p class="row">Poprawna: <b>${esc(q.correctText)}</b></p><p class="why">${esc(q.why)}</p>`:''}</li>`}).join('')}</ol>
+  </section>`;
+  const fx=document.getElementById('fix');
+  if(fx) fx.onclick=()=>{ S.quiz={qs:shuffle(wrong.map(q=>instantiate(q.src))),i:0,instant:true}; go('quiz'); };
+  document.getElementById('again').onclick=()=>{S.quiz=null;go('setup')};
+  document.getElementById('tolearn').onclick=()=>{S.quiz=null;go('learn')};
+}
+
+render();
+</script>
+</body>
+</html>
